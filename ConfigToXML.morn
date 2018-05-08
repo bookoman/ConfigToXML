@@ -2,7 +2,7 @@
   <asynRes>img,temp,sound</asynRes>
   <unDealRes>embed</unDealRes>
   <resTypes>png,jpg</resTypes>
-  <resExportPath>bin-debug/res/swf</resExportPath>
+  <resExportPath>src/res/swf</resExportPath>
   <resCanCompress>0</resCanCompress>
   <resPublishQuality>80</resPublishQuality>
   <codeExportPath>src/ui</codeExportPath>
