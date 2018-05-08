@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:WindowedApplication xmlns:fx="http://ns.adobe.com/mxml/2009" 
+					   xmlns:s="library://ns.adobe.com/flex/spark" 
+					   xmlns:mx="library://ns.adobe.com/flex/mx"
+					   width="600" height="400"
+					   addedToStage="this.addToStage()"
+					   >
+	<fx:Script>
+		<![CDATA[
+			import com.xl.tool.control.ExchangeViewMediator;
+			
+			import morn.core.handlers.Handler;
+			import morn.core.managers.ResLoader;
+			private var exchangeViewMediator:ExchangeViewMediator = null;
+			private function addToStage():void
+			{
+				App.init(main);
+				App.loader.load("res/swf/comp.swf",ResLoader.SWF,new Handler(this.resLoaded));
+			}
+			private function resLoaded(data:*):void
+			{
+				this.exchangeViewMediator = new ExchangeViewMediator();
+				this.exchangeViewMediator.initView(main);
+			}
+		]]>
+	</fx:Script>
+	
+	<s:SpriteVisualElement id="main" />
+	<fx:Declarations>
+		<!-- 将非可视元素（例如服务、值对象）放在此处 -->
+	</fx:Declarations>
+</s:WindowedApplication>
