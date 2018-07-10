@@ -4,6 +4,10 @@
 					   xmlns:mx="library://ns.adobe.com/flex/mx"
 					   width="600" height="400"
 					   addedToStage="this.addToStage()"
+					   nativeDragDrop="onDrop(event)"
+					   nativeDragEnter="onDragIn(event)"
+					   nativeDragComplete="onDragComplete(event)"
+					   
 					   >
 	<fx:Script>
 		<![CDATA[
@@ -16,11 +20,31 @@
 			{
 				App.init(main);
 				App.loader.load("res/swf/comp.swf",ResLoader.SWF,new Handler(this.resLoaded));
+				
 			}
 			private function resLoaded(data:*):void
 			{
 				this.exchangeViewMediator = new ExchangeViewMediator();
 				this.exchangeViewMediator.initView(main);
+			}
+			private function onDrop(e:NativeDragEvent):void
+			{
+				var ary:Array = e.clipboard.getData(ClipboardFormats.FILE_LIST_FORMAT) as Array;
+				var file:File = ary[0];
+				if(exchangeViewMediator)
+				{
+					this.exchangeViewMediator.exchangeUtil.file = file;
+					exchangeViewMediator.view.lblDir.text = file.nativePath;
+				}
+			}
+			private function onDragIn(e:Event):void
+			{
+				NativeDragManager.acceptDragDrop(this);
+//				e.target.clipboard.getData(ClipboardFormats.FILE_LIST_FORMAT) 
+			}
+			private function onDragComplete(e:Event):void
+			{
+				e.target;
 			}
 		]]>
 	</fx:Script>

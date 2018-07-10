@@ -7,6 +7,8 @@ package com.xl.tool.util
 	import flash.filesystem.FileMode;
 	import flash.filesystem.FileStream;
 	import flash.utils.ByteArray;
+	
+	import mx.controls.Alert;
 
 	public class ConfigToXMLItem
 	{
@@ -31,6 +33,10 @@ package com.xl.tool.util
 			{
 				this.csvToXml();
 			}
+			else
+			{
+				Alert.show("目前只支持.xml和.csv文件");
+			}
 		}
 		
 		
@@ -45,12 +51,16 @@ package com.xl.tool.util
 			
 			var xmlStr:String = "<?xml version='1.0' encoding='utf-8'?>\r<root>\r";
 			var rowsAry:Array = csvStr.split("\r\n");
+			if(rowsAry.length <= 0)
+				rowsAry = csvStr.split("\r");
 			var colsAry:Array;
 			var rowStr:String;
 			var colStr:String;
-			var colNames:Array = rowsAry[1].split(",");
+			var isEnd:Boolean = false;
+			var dataTypes:Array = rowsAry[2].split(",");
+			var colNames:Array = rowsAry[3].split(",");
 //			var myPattern:RegExp = / /g;
-			for(var i:int = 2;i < rowsAry.length;i++)
+			for(var i:int = 4;i < rowsAry.length;i++)
 			{
 				rowStr = rowsAry[i];
 				var tempAry:Array = rowStr.split("\"");
@@ -65,10 +75,25 @@ package com.xl.tool.util
 				for(var j:int = 0; j < colsAry.length;j++)
 				{
 					colStr = colsAry[j];
-//					colStr = colStr.replace(myPattern,",");
-					xmlStr += colNames[j] + "='" + colStr + "' ";
+					if(j == 0)
+					{
+						isEnd = colStr == "END";
+						continue;
+					}
+//					if(isNaN(Number(colStr))){
+//					if(dataTypes[j] == "Integer" || dataTypes[j] == "Double" || dataTypes[j] == "Long"){
+//						xmlStr += colNames[j] + "=" + colStr + " ";
+//					}
+//					else
+//					{
+						xmlStr += colNames[j] + "='" + colStr + "' ";
+//					}
 				}
 				xmlStr += "/>\r";
+				if(isEnd)
+				{
+					break;
+				}
 			}
 			xmlStr += "</root>";
 //			var xml:XML = new XML(xmlStr);
@@ -89,21 +114,58 @@ package com.xl.tool.util
 			
 			var xmlStr:String = "<?xml version='1.0' encoding='utf-8'?>\r<root>\r";
 			var colNames:Array = [];
-			for(var i:int = 1; i < sheet.rows;i++)
+			var dataTypes:Array = [];
+			var isEnd:Boolean = false;
+			var rowNameInd:int = 3;//列名行索引
+			var colValueInd:int = 1;//取值列索引
+			for(var i:int = rowNameInd - 1; i < sheet.rows;i++)
 			{
-				xmlStr += i > 1 ? "\t<element " : "";
+				
+				xmlStr += i > rowNameInd ? "\t<element " : "";
 				for(var j:int = 0;j < sheet.cols;j++)
 				{
-					if(i == 1)
+					if(j == 0)
 					{
-						colNames[j] = sheet.getCell(i,j);
+						isEnd = sheet.getCell(i,j).value == "END";
+						continue;
 					}
-					else
+					if(i == rowNameInd - 1)
 					{
-						xmlStr += colNames[j] + "='" + sheet.getCell(i,j) + "' ";
+						dataTypes[j] = sheet.getCell(i,j).value;
+					}
+					else if(i == rowNameInd)
+					{
+						colNames[j] = sheet.getCell(i,j).value;
+					}
+					else if(i > rowNameInd)
+					{
+						if(colNames[j].length > 0)
+						{
+							var value:String = sheet.getCell(i,j).value;
+							if(value.length > 0)
+							{
+//								if(dataTypes[j] == "Integer" || dataTypes[j] == "Double" || dataTypes[j] == "Long"){
+//									xmlStr += colNames[j] + "=" + sheet.getCell(i,j) + " ";
+//								}
+//								else{
+									xmlStr += colNames[j] + "='" + sheet.getCell(i,j) + "' ";
+//								}
+							}
+							else
+							{
+								xmlStr += colNames[j] + "='' ";
+							}
+							
+						}
+						
 					}
 				}
-				xmlStr += i > 1 ? "/>\r" : "";
+				xmlStr += i > rowNameInd ? "/>\r" : "";
+				
+				if(isEnd)
+				{
+					break;
+				}
 			}
 			xmlStr += "</root>";
 			this.saveXmlFile(xmlStr);

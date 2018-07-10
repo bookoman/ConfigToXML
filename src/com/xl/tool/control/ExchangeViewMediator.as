@@ -9,8 +9,8 @@ package com.xl.tool.control
 
 	public class ExchangeViewMediator
 	{
-		private var view:ExchangeViewUI;
-		private var exchangeUtil:ConfigToXMLUtil;
+		public var view:ExchangeViewUI;
+		public var exchangeUtil:ConfigToXMLUtil;
 		public function ExchangeViewMediator()
 		{
 		}

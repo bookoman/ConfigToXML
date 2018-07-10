@@ -8,7 +8,7 @@ package com.xl.tool.util
 
 	public class ConfigToXMLUtil
 	{
-		private var file:File;
+		public var file:File;
 		private var lblDir:Label;
 		private var progressBar:ProgressBar;
 		private var items:Vector.<ConfigToXMLItem>;
