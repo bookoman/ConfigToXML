@@ -1,0 +1,11 @@
+宠物技能抽取库配制表                    SkillGroupSample
+宠物技能配制表                          HeroSkillSample
+宠物经验配制表                          HeroLevelSample
+宠物配制表                              HeroSample
+宠物品质配制表                          QualitySample
+宠物品质评分配制表                      QualityScoreSample
+宠物物种配制表                          HeroTypeSample
+道具配制表                              ItemSample
+怪物配制表                              MasterHeroSample
+关卡地图配制表                          GateMapSample
+关卡配制表                              GateSample
